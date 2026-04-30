@@ -76,6 +76,38 @@
   const toastIcon     = document.getElementById('toastIcon');
   const toastMsg      = document.getElementById('toastMessage');
 
+  // Dashboard DOM
+  const dashboardCard = document.getElementById('dashboardCard');
+  const btnLogout     = document.getElementById('btnLogout');
+  
+  // Tabs
+  const tabHome       = document.getElementById('tabHome');
+  const tabArquivos   = document.getElementById('tabArquivos');
+  const tabProfile    = document.getElementById('tabProfile');
+  
+  // Panels
+  const panelHome     = document.getElementById('panelHome');
+  const panelArquivos = document.getElementById('panelArquivos');
+  const panelProfile  = document.getElementById('panelProfile');
+  
+  const fileUpload    = document.getElementById('fileUpload');
+  const fileUploadLabel= document.getElementById('fileUploadLabel');
+  const uploadNF      = document.getElementById('uploadNF');
+  const uploadData    = document.getElementById('uploadData');
+  const searchNF = document.getElementById('searchNF');
+  const searchDate = document.getElementById('searchDate');
+  const dashWelcomeName = document.getElementById('dashWelcomeName');
+  const profileName   = document.getElementById('profileName');
+  const profileIdentity= document.getElementById('profileIdentity');
+  const profileFilesCount= document.getElementById('profileFilesCount');
+  const btnSaveFile      = document.getElementById('btnSaveFile');
+  const filterArquivos   = document.getElementById('filterArquivos');
+  const arquivosList     = document.getElementById('arquivosList');
+
+  let fieldMode = 'none';
+  let signupFieldMode = 'none';
+  let isAdmin = true; // Definido como true para permitir gerenciamento completo
+
   // ─── SVG Icons ─────────────────────────────
   const ICONS = {
     user:  '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>',
@@ -83,9 +115,7 @@
     phone: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>'
   };
 
-  // ─── State ─────────────────────────────────
-  let fieldMode = 'none'; // 'none' | 'email' | 'phone'
-  let signupFieldMode = 'none';
+
 
   // ─── LocalStorage Helpers ──────────────────
   const STORAGE_KEY = 'login_cache';
@@ -116,6 +146,16 @@
     users.push(user);
     localStorage.setItem(USERS_KEY, JSON.stringify(users));
   }
+
+  // ─── Ensure admin user exists on startup ───
+  function initAdminUser() {
+    const users = getRegisteredUsers();
+    if (!users.some(u => u.identity === 'admin')) {
+      users.push({ name: 'Administrador', identity: 'admin', password: 'admin', files: [] });
+      localStorage.setItem(USERS_KEY, JSON.stringify(users));
+    }
+  }
+  initAdminUser();
 
   // ─── Phone Mask (BR format) ────────────────
   function formatPhone(digits) {
@@ -205,6 +245,16 @@
       signupIdentity.removeAttribute('maxlength');
     }
   }
+
+  // ─── Default Date ──────────────────────────
+  function setDefaultDate() {
+    const uploadData = document.getElementById('uploadData');
+    if (uploadData) {
+      const today = new Date().toISOString().split('T')[0];
+      uploadData.value = today;
+    }
+  }
+  setDefaultDate();
 
   // ─── Validation ────────────────────────────
   function showError(wrapper, errorEl, msg) {
@@ -323,24 +373,32 @@
     }, 3500);
   }
 
-  // ─── Toggle Views ──────────────────────────
-  signupLink.addEventListener('click', function (e) {
-    e.preventDefault();
-    loginCard.style.display = 'none';
-    signupCard.style.display = 'block';
-    signupCard.style.animation = 'none';
-    void signupCard.offsetWidth;
-    signupCard.style.animation = 'cardEntrance 0.8s var(--transition-smooth) both';
-  });
+  // ─── Centralized Card Navigation ───────────
+  function showCard(targetCard) {
+    if (!targetCard) return;
+    // Hide all possible cards
+    [loginCard, signupCard, forgotCard, googleCard, appleCard, dashboardCard].forEach(c => {
+      if (c) c.style.display = 'none';
+    });
+    // Show the target card
+    targetCard.style.display = 'block';
+    targetCard.style.animation = 'cardEntrance 0.8s ease both';
+  }
 
-  backToLoginLink.addEventListener('click', function (e) {
-    e.preventDefault();
-    signupCard.style.display = 'none';
-    loginCard.style.display = 'block';
-    loginCard.style.animation = 'none';
-    void loginCard.offsetWidth;
-    loginCard.style.animation = 'cardEntrance 0.8s var(--transition-smooth) both';
-  });
+  // Cadastre-se
+  if (signupLink) {
+    signupLink.addEventListener('click', function (e) {
+      e.preventDefault();
+      showCard(signupCard);
+    });
+  }
+
+  if (backToLoginLink) {
+    backToLoginLink.addEventListener('click', function (e) {
+      e.preventDefault();
+      showCard(loginCard);
+    });
+  }
 
   // ─── Toggle Password Visibility ────────────
   togglePwdBtn.addEventListener('click', function () {
@@ -426,16 +484,20 @@
         identityWrap.classList.add('success');
         passwordInput.closest('.input-wrapper').classList.add('success');
 
-        if (rememberMe.checked) {
-          saveToCache({
-            identity: enteredIdentity,
-            identityType: fieldMode,
-            rememberMe: true,
-            lastLogin: new Date().toISOString()
-          });
-        } else {
-          clearCache();
-        }
+        const sessionData = {
+          identity: enteredIdentity,
+          identityType: fieldMode,
+          rememberMe: rememberMe.checked,
+          lastLogin: new Date().toISOString(),
+          activeUser: user,
+          isLoggedIn: true
+        };
+        saveToCache(sessionData);
+        
+        setTimeout(() => {
+          showDashboard(user);
+        }, 500);
+
       } else {
         showToast('Credenciais inválidas ou usuário não encontrado.', 'error');
         loginCard.style.animation = 'none';
@@ -483,20 +545,13 @@
   // ─── Forgot Password ──────────────────────
   document.getElementById('forgotPassword').addEventListener('click', function (e) {
     e.preventDefault();
-    loginCard.style.display = 'none';
-    forgotCard.style.display = 'block';
-    forgotCard.style.animation = 'none';
-    void forgotCard.offsetWidth;
-    forgotCard.style.animation = 'cardEntrance 0.8s var(--transition-smooth) both';
+    showCard(forgotCard);
   });
 
   backToLoginFromForgotLink.addEventListener('click', function (e) {
     e.preventDefault();
-    forgotCard.style.display = 'none';
-    loginCard.style.display = 'block';
-    loginCard.style.animation = 'none';
-    void loginCard.offsetWidth;
-    loginCard.style.animation = 'cardEntrance 0.8s var(--transition-smooth) both';
+    forgotForm.reset();
+    showCard(loginCard);
   });
 
   function validateForgotPwd() {
@@ -566,38 +621,24 @@
   // ─── Google / Apple Login ─────────────────
   btnGoogleAuth.addEventListener('click', function (e) {
     e.preventDefault();
-    loginCard.style.display = 'none';
-    googleCard.style.display = 'block';
-    googleCard.style.animation = 'none';
-    void googleCard.offsetWidth;
-    googleCard.style.animation = 'cardEntrance 0.8s var(--transition-smooth) both';
+    showCard(googleCard);
   });
 
   btnAppleAuth.addEventListener('click', function (e) {
     e.preventDefault();
-    loginCard.style.display = 'none';
-    appleCard.style.display = 'block';
-    appleCard.style.animation = 'none';
-    void appleCard.offsetWidth;
-    appleCard.style.animation = 'cardEntrance 0.8s var(--transition-smooth) both';
+    showCard(appleCard);
   });
 
   backToLoginFromGoogle.addEventListener('click', function (e) {
     e.preventDefault();
-    googleCard.style.display = 'none';
-    loginCard.style.display = 'block';
-    loginCard.style.animation = 'none';
-    void loginCard.offsetWidth;
-    loginCard.style.animation = 'cardEntrance 0.8s var(--transition-smooth) both';
+    googleForm.reset();
+    showCard(loginCard);
   });
 
   backToLoginFromApple.addEventListener('click', function (e) {
     e.preventDefault();
-    appleCard.style.display = 'none';
-    loginCard.style.display = 'block';
-    loginCard.style.animation = 'none';
-    void loginCard.offsetWidth;
-    loginCard.style.animation = 'cardEntrance 0.8s var(--transition-smooth) both';
+    appleForm.reset();
+    showCard(loginCard);
   });
 
   googleForm.addEventListener('submit', function (e) {
@@ -609,7 +650,7 @@
       btnGoogleSubmit.disabled = false;
       showToast('Autenticado com Google com sucesso!', 'success');
       googleForm.reset();
-      backToLoginFromGoogle.click();
+      showCard(loginCard);
     }, 1500);
   });
 
@@ -622,28 +663,238 @@
       btnAppleSubmit.disabled = false;
       showToast('Autenticado com Apple com sucesso!', 'success');
       appleForm.reset();
-      backToLoginFromApple.click();
+      showCard(loginCard);
     }, 1500);
   });
 
   // ─── Restore Cache on Load ─────────────────
   function restoreFromCache() {
     const cached = loadFromCache();
-    if (cached && cached.rememberMe) {
-      identityInput.value = cached.identity || '';
-      rememberMe.checked  = true;
-      detectAndFormat();
+    if (cached) {
+      if (cached.isLoggedIn && cached.activeUser) {
+        showDashboard(cached.activeUser);
+      } else if (cached.rememberMe) {
+        identityInput.value = cached.identity || '';
+        rememberMe.checked  = true;
+        detectAndFormat();
+      }
     }
   }
 
-  restoreFromCache();
+  // ─── Dashboard Logic ───────────────────────
+  function showDashboard(user) {
+    showCard(dashboardCard);
 
-  // ─── Shake Keyframes (injected) ────────────
-  if (!document.getElementById('shake-style')) {
-    var style = document.createElement('style');
-    style.id = 'shake-style';
-    style.textContent = '@keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-8px)} 40%{transform:translateX(8px)} 60%{transform:translateX(-5px)} 80%{transform:translateX(5px)} }';
-    document.head.appendChild(style);
+    dashWelcomeName.textContent = user.name.split(' ')[0];
+    profileName.textContent = user.name;
+    profileIdentity.textContent = user.identity;
+
+    const users = getRegisteredUsers();
+    const currentUserData = users.find(u => u.identity === user.identity);
+    const filesCount = currentUserData && currentUserData.files ? currentUserData.files.length : 0;
+    profileFilesCount.textContent = `${filesCount} arquivo(s)`;
+
+    switchTab(tabHome, panelHome);
+    renderArquivos();
   }
+
+  btnLogout.addEventListener('click', () => {
+    const cached = loadFromCache();
+    if (cached) {
+      cached.isLoggedIn = false;
+      cached.activeUser = null;
+      if (!cached.rememberMe) cached.identity = '';
+      saveToCache(cached);
+    }
+    form.reset();
+    identityWrap.classList.remove('success');
+    passwordInput.closest('.input-wrapper').classList.remove('success');
+    showCard(loginCard);
+    if (cached && cached.rememberMe && cached.identity) {
+      identityInput.value = cached.identity;
+      detectAndFormat();
+    }
+  });
+
+  const allTabs = [tabHome, tabArquivos, tabProfile];
+  const allPanels = [panelHome, panelArquivos, panelProfile];
+
+  function switchTab(activeTab, activePanel) {
+    allTabs.forEach(t => t.classList.remove('active'));
+    allPanels.forEach(p => p.classList.remove('active'));
+    
+    activeTab.classList.add('active');
+    activePanel.classList.add('active');
+  }
+
+  tabHome.addEventListener('click', () => switchTab(tabHome, panelHome));
+  tabArquivos.addEventListener('click', () => switchTab(tabArquivos, panelArquivos));
+  tabProfile.addEventListener('click', () => switchTab(tabProfile, panelProfile));
+
+  fileUpload.addEventListener('change', (e) => {
+    if (e.target.files.length > 0) {
+      fileUploadLabel.textContent = e.target.files[0].name;
+    } else {
+      fileUploadLabel.textContent = 'Escolher Arquivo';
+    }
+  });
+
+  btnSaveFile.addEventListener('click', () => {
+    if (fileUpload.files.length === 0) {
+      showToast('Selecione um arquivo primeiro.', 'error');
+      return;
+    }
+    if (!uploadNF.value.trim() || !uploadData.value) {
+      showToast('Preencha a NF e a Data de Moldagem.', 'error');
+      return;
+    }
+
+    const file = fileUpload.files[0];
+    const reader = new FileReader();
+
+    btnSaveFile.classList.add('loading');
+    btnSaveFile.disabled = true;
+
+    reader.onload = function(event) {
+      const fileData = event.target.result; // Base64 Data URL
+      const cached = loadFromCache();
+      
+      if (cached && cached.activeUser) {
+        const users = getRegisteredUsers();
+        const userIndex = users.findIndex(u => u.identity === cached.activeUser.identity);
+        if (userIndex !== -1) {
+          if (!users[userIndex].files) users[userIndex].files = [];
+          
+          users[userIndex].files.push({
+            name: file.name,
+            nf: uploadNF.value.trim(),
+            date: uploadData.value,
+            timestamp: Date.now(),
+            content: fileData // Store the file content
+          });
+          localStorage.setItem(USERS_KEY, JSON.stringify(users));
+          
+          profileFilesCount.textContent = `${users[userIndex].files.length} arquivo(s)`;
+          showToast(`Arquivo salvo com sucesso!`, 'success');
+          
+          // Reset form
+          fileUpload.value = '';
+          fileUploadLabel.textContent = 'Escolher Arquivo';
+          uploadNF.value = '';
+          setDefaultDate();
+
+          renderArquivos();
+        }
+      }
+      btnSaveFile.classList.remove('loading');
+      btnSaveFile.disabled = false;
+    };
+
+    reader.readAsDataURL(file);
+  });
+
+  // renderArquivos will be defined below
+
+  // Update render function to handle filters and search
+  function renderArquivos() {
+    const cached = loadFromCache();
+    if (!cached || !cached.activeUser) return;
+    const users = getRegisteredUsers();
+    const user = users.find(u => u.identity === cached.activeUser.identity);
+    if (!user || !user.files || user.files.length === 0) {
+      arquivosList.innerHTML = '<p style="color: var(--clr-text-muted);">Nenhum arquivo encontrado.</p>';
+      return;
+    }
+    let files = [...user.files];
+    const filter = filterArquivos.value;
+    const nfQuery = searchNF.value.trim().toLowerCase();
+    const dateQuery = searchDate.value;
+
+    // Apply filter ordering
+    if (filter === 'recent') {
+      files.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+    } else if (filter === 'data') {
+      files.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
+    } else if (filter === 'nf') {
+      files.sort((a, b) => (a.nf || '').localeCompare(b.nf || ''));
+    }
+
+    // Apply search queries
+    if (nfQuery) {
+      files = files.filter(f => (f.nf || '').toLowerCase().includes(nfQuery));
+    }
+    if (dateQuery) {
+      files = files.filter(f => f.date === dateQuery);
+    }
+
+    arquivosList.innerHTML = '';
+    files.forEach((f, idx) => {
+      const name = typeof f === 'object' ? f.name : f;
+      const nf = typeof f === 'object' && f.nf ? f.nf : 'N/A';
+      const date = typeof f === 'object' && f.date ? new Date(f.date + 'T00:00:00').toLocaleDateString('pt-BR') : 'N/A';
+      const content = typeof f === 'object' ? f.content : null;
+
+      const div = document.createElement('div');
+      div.className = 'file-item';
+      
+      let inner = `
+        <div class="file-item-title">${name}</div>
+        <div class="file-item-meta">
+          <span>NF: ${nf}</span>
+          <span>Data: ${date}</span>
+        </div>
+        <div style="display: flex; gap: 8px; margin-top: 8px;">`;
+      
+      if (content) {
+        inner += `<a href="${content}" download="${name}" class="btn-open" style="background:var(--clr-primary);color:#fff;border:none;padding:6px 12px;border-radius:4px;cursor:pointer;font-size:0.8rem;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;">Baixar Arquivo</a>`;
+      }
+      
+      if (isAdmin) {
+        inner += `<button type="button" class="btn-delete" data-idx="${idx}" style="background:#e11d48;color:#fff;border:none;padding:6px 12px;border-radius:4px;cursor:pointer;font-size:0.8rem;margin-left:auto;">Excluir</button>`;
+      }
+      
+      inner += `</div>`;
+      div.innerHTML = inner;
+      arquivosList.appendChild(div);
+    });
+
+    // Attach delete handlers only if admin
+    if (isAdmin) {
+      const deleteButtons = arquivosList.querySelectorAll('.btn-delete');
+      deleteButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const idx = parseInt(btn.getAttribute('data-idx'));
+          deleteFile(idx);
+        });
+      });
+    }
+  }
+
+  function deleteFile(index) {
+    if (!isAdmin) {
+      showToast('Você não tem permissão para excluir arquivos.', 'error');
+      return;
+    }
+    const cached = loadFromCache();
+    if (!cached || !cached.activeUser) return;
+    const users = getRegisteredUsers();
+    const userIdx = users.findIndex(u => u.identity === cached.activeUser.identity);
+    if (userIdx === -1) return;
+    const user = users[userIdx];
+    if (!user.files || index < 0 || index >= user.files.length) return;
+    const removed = user.files.splice(index, 1);
+    localStorage.setItem(USERS_KEY, JSON.stringify(users));
+    profileFilesCount.textContent = `${user.files.length} arquivo(s)`;
+    showToast(`Arquivo "${removed[0].name || removed[0]}" excluído.`, 'success');
+    renderArquivos();
+  }
+
+  // Attach filter/search listeners
+  filterArquivos.addEventListener('change', renderArquivos);
+  searchNF.addEventListener('input', renderArquivos);
+  searchDate.addEventListener('change', renderArquivos);
+
+  // Restaurar sessão ao final após todas as variáveis estarem inicializadas
+  restoreFromCache();
 
 })();
