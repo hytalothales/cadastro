@@ -117,9 +117,9 @@
 
 
 
-  // ─── LocalStorage Helpers ──────────────────
+  // ─── API Helpers ───────────────────────────
   const STORAGE_KEY = 'login_cache';
-  const USERS_KEY = 'registered_users';
+  const API_URL = 'http://localhost:8081/api';
 
   function saveToCache(data) {
     try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch (_) {}
@@ -135,27 +135,6 @@
   function clearCache() {
     try { localStorage.removeItem(STORAGE_KEY); } catch (_) {}
   }
-
-  function getRegisteredUsers() {
-    try { return JSON.parse(localStorage.getItem(USERS_KEY)) || []; }
-    catch (_) { return []; }
-  }
-
-  function saveUser(user) {
-    const users = getRegisteredUsers();
-    users.push(user);
-    localStorage.setItem(USERS_KEY, JSON.stringify(users));
-  }
-
-  // ─── Ensure admin user exists on startup ───
-  function initAdminUser() {
-    const users = getRegisteredUsers();
-    if (!users.some(u => u.identity === 'admin')) {
-      users.push({ name: 'Administrador', identity: 'admin', password: 'admin', files: [] });
-      localStorage.setItem(USERS_KEY, JSON.stringify(users));
-    }
-  }
-  initAdminUser();
 
   // ─── Phone Mask (BR format) ────────────────
   function formatPhone(digits) {
@@ -338,12 +317,6 @@
       }
     }
     
-    const users = getRegisteredUsers();
-    if (users.some(u => u.identity === val)) {
-      showError(signupIdentityWrap, signupIdentityError, 'Esta conta já está cadastrada.');
-      return false;
-    }
-
     clearError(signupIdentityWrap, signupIdentityError);
     return true;
   }
@@ -473,13 +446,19 @@
       btnLogin.classList.remove('loading');
       btnLogin.disabled = false;
 
-      const users = getRegisteredUsers();
       const enteredIdentity = identityInput.value.trim();
       const enteredPassword = passwordInput.value;
 
-      const user = users.find(u => u.identity === enteredIdentity && u.password === enteredPassword);
-
-      if (user) {
+      fetch(API_URL + '/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ identity: enteredIdentity, password: enteredPassword })
+      })
+      .then(response => {
+        if (!response.ok) throw new Error('Credenciais inválidas');
+        return response.json();
+      })
+      .then(user => {
         showToast(`Bem-vindo(a), ${user.name}!`, 'success');
         identityWrap.classList.add('success');
         passwordInput.closest('.input-wrapper').classList.add('success');
@@ -497,13 +476,13 @@
         setTimeout(() => {
           showDashboard(user);
         }, 500);
-
-      } else {
+      })
+      .catch(err => {
         showToast('Credenciais inválidas ou usuário não encontrado.', 'error');
         loginCard.style.animation = 'none';
         void loginCard.offsetWidth;
         loginCard.style.animation = 'shake 0.4s ease';
-      }
+      });
     }, 1200);
   });
 
@@ -525,20 +504,35 @@
     btnSignup.disabled = true;
 
     setTimeout(() => {
-      saveUser({
-        name: signupName.value.trim(),
-        identity: signupIdentity.value.trim(),
-        password: signupPassword.value
+      fetch(API_URL + '/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: signupName.value.trim(),
+          identity: signupIdentity.value.trim(),
+          password: signupPassword.value
+        })
+      })
+      .then(response => {
+        if (response.status === 409) throw new Error('Usuário já existe');
+        if (!response.ok) throw new Error('Erro ao cadastrar');
+        return response.text();
+      })
+      .then(msg => {
+        btnSignup.classList.remove('loading');
+        btnSignup.disabled = false;
+        showToast('Cadastro realizado com sucesso!', 'success');
+        
+        signupForm.reset();
+        setSignupMode('none');
+        
+        backToLoginLink.click();
+      })
+      .catch(err => {
+        btnSignup.classList.remove('loading');
+        btnSignup.disabled = false;
+        showToast(err.message, 'error');
       });
-
-      btnSignup.classList.remove('loading');
-      btnSignup.disabled = false;
-      showToast('Cadastro realizado com sucesso!', 'success');
-      
-      signupForm.reset();
-      setSignupMode('none');
-      
-      backToLoginLink.click();
     }, 1500);
   });
 
@@ -689,9 +683,7 @@
     profileName.textContent = user.name;
     profileIdentity.textContent = user.identity;
 
-    const users = getRegisteredUsers();
-    const currentUserData = users.find(u => u.identity === user.identity);
-    const filesCount = currentUserData && currentUserData.files ? currentUserData.files.length : 0;
+    const filesCount = user.files ? user.files.length : 0;
     profileFilesCount.textContent = `${filesCount} arquivo(s)`;
 
     switchTab(tabHome, panelHome);
@@ -760,21 +752,24 @@
       const cached = loadFromCache();
       
       if (cached && cached.activeUser) {
-        const users = getRegisteredUsers();
-        const userIndex = users.findIndex(u => u.identity === cached.activeUser.identity);
-        if (userIndex !== -1) {
-          if (!users[userIndex].files) users[userIndex].files = [];
-          
-          users[userIndex].files.push({
-            name: file.name,
-            nf: uploadNF.value.trim(),
-            date: uploadData.value,
-            timestamp: Date.now(),
-            content: fileData // Store the file content
-          });
-          localStorage.setItem(USERS_KEY, JSON.stringify(users));
-          
-          profileFilesCount.textContent = `${users[userIndex].files.length} arquivo(s)`;
+        const novoArquivo = {
+          name: file.name,
+          nf: uploadNF.value.trim(),
+          date: uploadData.value,
+          timestamp: Date.now(),
+          content: fileData
+        };
+
+        fetch(API_URL + '/arquivos/' + cached.activeUser.identity, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(novoArquivo)
+        })
+        .then(res => {
+          if(!res.ok) throw new Error('Erro ao salvar no servidor');
+          return res.text();
+        })
+        .then(() => {
           showToast(`Arquivo salvo com sucesso!`, 'success');
           
           // Reset form
@@ -784,7 +779,10 @@
           setDefaultDate();
 
           renderArquivos();
-        }
+        })
+        .catch(err => {
+          showToast(err.message, 'error');
+        });
       }
       btnSaveFile.classList.remove('loading');
       btnSaveFile.disabled = false;
@@ -799,75 +797,84 @@
   function renderArquivos() {
     const cached = loadFromCache();
     if (!cached || !cached.activeUser) return;
-    const users = getRegisteredUsers();
-    const user = users.find(u => u.identity === cached.activeUser.identity);
-    if (!user || !user.files || user.files.length === 0) {
-      arquivosList.innerHTML = '<p style="color: var(--clr-text-muted);">Nenhum arquivo encontrado.</p>';
-      return;
-    }
-    let files = [...user.files];
-    const filter = filterArquivos.value;
-    const nfQuery = searchNF.value.trim().toLowerCase();
-    const dateQuery = searchDate.value;
+    
+    fetch(API_URL + '/arquivos/' + cached.activeUser.identity)
+      .then(res => res.json())
+      .then(filesData => {
+        if (!filesData || filesData.length === 0) {
+          arquivosList.innerHTML = '<p style="color: var(--clr-text-muted);">Nenhum arquivo encontrado.</p>';
+          profileFilesCount.textContent = `0 arquivo(s)`;
+          return;
+        }
 
-    // Apply filter ordering
-    if (filter === 'recent') {
-      files.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
-    } else if (filter === 'data') {
-      files.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
-    } else if (filter === 'nf') {
-      files.sort((a, b) => (a.nf || '').localeCompare(b.nf || ''));
-    }
+        profileFilesCount.textContent = `${filesData.length} arquivo(s)`;
+        let files = [...filesData];
+        const filter = filterArquivos.value;
+        const nfQuery = searchNF.value.trim().toLowerCase();
+        const dateQuery = searchDate.value;
 
-    // Apply search queries
-    if (nfQuery) {
-      files = files.filter(f => (f.nf || '').toLowerCase().includes(nfQuery));
-    }
-    if (dateQuery) {
-      files = files.filter(f => f.date === dateQuery);
-    }
+        // Apply filter ordering
+        if (filter === 'recent') {
+          files.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+        } else if (filter === 'data') {
+          files.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
+        } else if (filter === 'nf') {
+          files.sort((a, b) => (a.nf || '').localeCompare(b.nf || ''));
+        }
 
-    arquivosList.innerHTML = '';
-    files.forEach((f, idx) => {
-      const name = typeof f === 'object' ? f.name : f;
-      const nf = typeof f === 'object' && f.nf ? f.nf : 'N/A';
-      const date = typeof f === 'object' && f.date ? new Date(f.date + 'T00:00:00').toLocaleDateString('pt-BR') : 'N/A';
-      const content = typeof f === 'object' ? f.content : null;
+        // Apply search queries
+        if (nfQuery) {
+          files = files.filter(f => (f.nf || '').toLowerCase().includes(nfQuery));
+        }
+        if (dateQuery) {
+          files = files.filter(f => f.date === dateQuery);
+        }
 
-      const div = document.createElement('div');
-      div.className = 'file-item';
-      
-      let inner = `
-        <div class="file-item-title">${name}</div>
-        <div class="file-item-meta">
-          <span>NF: ${nf}</span>
-          <span>Data: ${date}</span>
-        </div>
-        <div style="display: flex; gap: 8px; margin-top: 8px;">`;
-      
-      if (content) {
-        inner += `<a href="${content}" download="${name}" class="btn-open" style="background:var(--clr-primary);color:#fff;border:none;padding:6px 12px;border-radius:4px;cursor:pointer;font-size:0.8rem;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;">Baixar Arquivo</a>`;
-      }
-      
-      if (isAdmin) {
-        inner += `<button type="button" class="btn-delete" data-idx="${idx}" style="background:#e11d48;color:#fff;border:none;padding:6px 12px;border-radius:4px;cursor:pointer;font-size:0.8rem;margin-left:auto;">Excluir</button>`;
-      }
-      
-      inner += `</div>`;
-      div.innerHTML = inner;
-      arquivosList.appendChild(div);
-    });
+        arquivosList.innerHTML = '';
+        files.forEach((f, idx) => {
+          const name = typeof f === 'object' ? f.name : f;
+          const nf = typeof f === 'object' && f.nf ? f.nf : 'N/A';
+          const date = typeof f === 'object' && f.date ? new Date(f.date + 'T00:00:00').toLocaleDateString('pt-BR') : 'N/A';
+          const content = typeof f === 'object' ? f.content : null;
 
-    // Attach delete handlers only if admin
-    if (isAdmin) {
-      const deleteButtons = arquivosList.querySelectorAll('.btn-delete');
-      deleteButtons.forEach(btn => {
-        btn.addEventListener('click', () => {
-          const idx = parseInt(btn.getAttribute('data-idx'));
-          deleteFile(idx);
+          const div = document.createElement('div');
+          div.className = 'file-item';
+          
+          let inner = `
+            <div class="file-item-title">${name}</div>
+            <div class="file-item-meta">
+              <span>NF: ${nf}</span>
+              <span>Data: ${date}</span>
+            </div>
+            <div style="display: flex; gap: 8px; margin-top: 8px;">`;
+          
+          if (content) {
+            inner += `<a href="${content}" download="${name}" class="btn-open" style="background:var(--clr-primary);color:#fff;border:none;padding:6px 12px;border-radius:4px;cursor:pointer;font-size:0.8rem;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;">Baixar Arquivo</a>`;
+          }
+          
+          if (isAdmin) {
+            inner += `<button type="button" class="btn-delete" data-idx="${idx}" style="background:#e11d48;color:#fff;border:none;padding:6px 12px;border-radius:4px;cursor:pointer;font-size:0.8rem;margin-left:auto;">Excluir</button>`;
+          }
+          
+          inner += `</div>`;
+          div.innerHTML = inner;
+          arquivosList.appendChild(div);
         });
+
+        // Attach delete handlers only if admin
+        if (isAdmin) {
+          const deleteButtons = arquivosList.querySelectorAll('.btn-delete');
+          deleteButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+              const idx = parseInt(btn.getAttribute('data-idx'));
+              deleteFile(idx);
+            });
+          });
+        }
+      })
+      .catch(err => {
+         arquivosList.innerHTML = '<p style="color: var(--clr-text-muted);">Erro ao carregar arquivos do servidor.</p>';
       });
-    }
   }
 
   function deleteFile(index) {
@@ -875,18 +882,7 @@
       showToast('Você não tem permissão para excluir arquivos.', 'error');
       return;
     }
-    const cached = loadFromCache();
-    if (!cached || !cached.activeUser) return;
-    const users = getRegisteredUsers();
-    const userIdx = users.findIndex(u => u.identity === cached.activeUser.identity);
-    if (userIdx === -1) return;
-    const user = users[userIdx];
-    if (!user.files || index < 0 || index >= user.files.length) return;
-    const removed = user.files.splice(index, 1);
-    localStorage.setItem(USERS_KEY, JSON.stringify(users));
-    profileFilesCount.textContent = `${user.files.length} arquivo(s)`;
-    showToast(`Arquivo "${removed[0].name || removed[0]}" excluído.`, 'success');
-    renderArquivos();
+    showToast('Ação de deletar arquivo será implementada na API futuramente.', 'success');
   }
 
   // Attach filter/search listeners
