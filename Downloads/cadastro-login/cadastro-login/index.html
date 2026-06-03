@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Login - Acesse sua conta">
+  <title>Login | Acesse sua conta</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div class="bg-orbs" aria-hidden="true">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+    <div class="orb orb-4"></div>
+  </div>
+
+  <main class="login-container">
+    <div class="login-card" id="loginCard">
+      <div class="brand">
+        <div class="brand-icon" id="brandIcon"
+          style="background: transparent; box-shadow: none; width: auto; height: auto;">
+          <img src="logo.png" alt="DSEC Logo" class="brand-logo" style="max-width: 160px; height: auto;">
+        </div>
+        <h1 class="brand-name" style="font-size: 1.5rem; margin-top: 10px;">Bem vindo! Acesse sua conta.</h1>
+      </div>
+
+      <form id="loginForm" class="login-form" autocomplete="off" novalidate>
+        <div class="form-group" id="identityGroup">
+          <label for="identity" class="form-label" id="identityLabel">E-mail ou Telefone</label>
+          <div class="input-wrapper" id="identityWrapper">
+            <span class="input-icon" id="identityIcon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                <circle cx="12" cy="7" r="4" />
+              </svg>
+            </span>
+            <input type="text" id="identity" class="form-input" placeholder="Digite seu e-mail ou telefone" required
+              autocomplete="off">
+            <span class="input-badge" id="identityBadge"></span>
+          </div>
+          <span class="form-error" id="identityError"></span>
+        </div>
+
+        <div class="form-group" id="passwordGroup">
+          <label for="password" class="form-label">Senha</label>
+          <div class="input-wrapper">
+            <span class="input-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="11" width="18" height="11" rx="2" />
+                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+              </svg>
+            </span>
+            <input type="password" id="password" class="form-input" placeholder="Digite sua senha" required
+              autocomplete="off">
+            <button type="button" class="toggle-password" id="togglePassword" aria-label="Mostrar senha">
+              <svg id="eyeOpen" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                <circle cx="12" cy="12" r="3" />
+              </svg>
+              <svg id="eyeClosed" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none">
+                <path
+                  d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
+                <line x1="1" y1="1" x2="23" y2="23" />
+              </svg>
+            </button>
+          </div>
+          <span class="form-error" id="passwordError"></span>
+        </div>
+
+        <div class="form-options">
+          <label class="checkbox-wrapper" id="rememberWrapper">
+            <input type="checkbox" id="rememberMe" checked>
+            <span class="checkbox-custom"></span>
+            <span class="checkbox-label">Lembrar de mim</span>
+          </label>
+          <a href="#" class="forgot-link" id="forgotPassword">Esqueceu a senha?</a>
+        </div>
+
+        <button type="submit" class="btn-login" id="btnLogin">
+          <span class="btn-text">Entrar</span>
+          <span class="btn-loader" id="btnLoader"><svg width="20" height="20" viewBox="0 0 24 24" class="spinner">
+              <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="3"
+                stroke-dasharray="31.4 31.4" stroke-linecap="round" />
+            </svg></span>
+        </button>
+
+        <div class="divider"><span class="divider-line"></span><span class="divider-text">ou</span><span
+            class="divider-line"></span></div>
+
+        <div class="social-buttons">
+          <button type="button" class="btn-social" id="btnGoogle" aria-label="Google">
+            <svg width="20" height="20" viewBox="0 0 24 24">
+              <path
+                d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"
+                fill="#4285F4" />
+              <path
+                d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                fill="#34A853" />
+              <path
+                d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+                fill="#FBBC05" />
+              <path
+                d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                fill="#EA4335" />
+            </svg>
+            <span>Google</span>
+          </button>
+          <button type="button" class="btn-social" id="btnApple" aria-label="Apple">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z" />
+            </svg>
+            <span>Apple</span>
+          </button>
+        </div>
+      </form>
+
+      <div class="signup-link">
+        <p>Não tem uma conta? <a href="#" id="signupLink">Cadastre-se</a></p>
+      </div>
+    </div>
+
+    <div class="login-card" id="signupCard" style="display: none;">
+      <div class="brand">
+        <div class="brand-icon" style="background: transparent; box-shadow: none; width: auto; height: auto;">
+          <img src="logo.png" alt="DSEC Logo" class="brand-logo" style="max-width: 160px; height: auto;">
+        </div>
+        <h1 class="brand-name" style="font-size: 1.5rem; margin-top: 10px;">Cadastre-se</h1>
+        <p class="brand-subtitle">Crie sua conta para começar.</p>
+      </div>
+
+      <form id="signupForm" class="login-form" autocomplete="off" novalidate>
+        <div class="form-group" id="signupNameGroup">
+          <label for="signupName" class="form-label">Nome Completo</label>
+          <div class="input-wrapper">
+            <span class="input-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                <circle cx="12" cy="7" r="4" />
+              </svg>
+            </span>
+            <input type="text" id="signupName" class="form-input" placeholder="Digite seu nome completo" required
+              autocomplete="name">
+          </div>
+          <span class="form-error" id="signupNameError"></span>
+        </div>
+
+        <div class="form-group" id="signupIdentityGroup">
+          <label for="signupIdentity" class="form-label" id="signupIdentityLabel">E-mail ou Telefone</label>
+          <div class="input-wrapper" id="signupIdentityWrapper">
+            <span class="input-icon" id="signupIdentityIcon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                <circle cx="12" cy="7" r="4" />
+              </svg>
+            </span>
+            <input type="text" id="signupIdentity" class="form-input" placeholder="Digite seu e-mail ou telefone"
+              required autocomplete="off">
+            <span class="input-badge" id="signupIdentityBadge"></span>
+          </div>
+          <span class="form-error" id="signupIdentityError"></span>
+        </div>
+
+        <div class="form-group" id="signupObraGroup">
+          <label for="signupObra" class="form-label">Nome da Obra</label>
+          <div class="input-wrapper">
+            <span class="input-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+              </svg>
+            </span>
+            <input type="text" id="signupObra" class="form-input" placeholder="Digite o nome da obra" required>
+          </div>
+          <span class="form-error" id="signupObraError"></span>
+        </div>
+
+        <div class="form-group" id="signupPasswordGroup">
+          <label for="signupPassword" class="form-label">Senha</label>
+          <div class="input-wrapper">
+            <span class="input-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="11" width="18" height="11" rx="2" />
+                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+              </svg>
+            </span>
+            <input type="password" id="signupPassword" class="form-input" placeholder="Crie uma senha" required
+              autocomplete="new-password">
+            <button type="button" class="toggle-password" id="toggleSignupPassword" aria-label="Mostrar senha">
+              <svg id="signupEyeOpen" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                <circle cx="12" cy="12" r="3" />
+              </svg>
+              <svg id="signupEyeClosed" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none">
+                <path
+                  d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
+                <line x1="1" y1="1" x2="23" y2="23" />
+              </svg>
+            </button>
+          </div>
+          <span class="form-error" id="signupPasswordError"></span>
+        </div>
+
+        <button type="submit" class="btn-login" id="btnSignup">
+          <span class="btn-text">Criar Conta</span>
+          <span class="btn-loader" id="btnSignupLoader"><svg width="20" height="20" viewBox="0 0 24 24" class="spinner">
+              <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="3"
+                stroke-dasharray="31.4 31.4" stroke-linecap="round" />
+            </svg></span>
+        </button>
+      </form>
+
+      <div class="signup-link">
+        <p>Já tem uma conta? <a href="#" id="backToLoginLink">Entrar</a></p>
+      </div>
+    </div>
+
+    <div class="login-card" id="forgotCard" style="display: none;">
+      <div class="brand">
+        <div class="brand-icon" style="background: transparent; box-shadow: none; width: auto; height: auto;">
+          <img src="logo.png" alt="DSEC Logo" class="brand-logo" style="max-width: 160px; height: auto;">
+        </div>
+        <h1 class="brand-name" style="font-size: 1.5rem; margin-top: 10px;">Recuperar Senha</h1>
+        <p class="brand-subtitle">Crie uma nova senha para sua conta.</p>
+      </div>
+
+      <form id="forgotForm" class="login-form" autocomplete="off" novalidate>
+        <div class="form-group" id="forgotPasswordGroup">
+          <label for="forgotPasswordInput" class="form-label">Nova Senha</label>
+          <div class="input-wrapper">
+            <span class="input-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="11" width="18" height="11" rx="2" />
+                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+              </svg>
+            </span>
+            <input type="password" id="forgotPasswordInput" class="form-input" placeholder="Digite a nova senha"
+              required>
+            <button type="button" class="toggle-password" id="toggleForgotPwdBtn" aria-label="Mostrar senha">
+              <svg id="forgotEyeOpen" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                <circle cx="12" cy="12" r="3" />
+              </svg>
+              <svg id="forgotEyeClosed" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none">
+                <path
+                  d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
+                <line x1="1" y1="1" x2="23" y2="23" />
+              </svg>
+            </button>
+          </div>
+          <span class="form-error" id="forgotPasswordError"></span>
+        </div>
+
+        <div class="form-group" id="forgotConfirmGroup">
+          <label for="forgotConfirmInput" class="form-label">Confirmar Senha</label>
+          <div class="input-wrapper">
+            <span class="input-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="11" width="18" height="11" rx="2" />
+                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+              </svg>
+            </span>
+            <input type="password" id="forgotConfirmInput" class="form-input" placeholder="Confirme a nova senha"
+              required>
+            <button type="button" class="toggle-password" id="toggleForgotConfirmBtn" aria-label="Mostrar senha">
+              <svg id="forgotConfirmEyeOpen" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                <circle cx="12" cy="12" r="3" />
+              </svg>
+              <svg id="forgotConfirmEyeClosed" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                style="display:none">
+                <path
+                  d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
+                <line x1="1" y1="1" x2="23" y2="23" />
+              </svg>
+            </button>
+          </div>
+          <span class="form-error" id="forgotConfirmError"></span>
+        </div>
+
+        <button type="submit" class="btn-login" id="btnForgotSubmit">
+          <span class="btn-text">Alterar Senha</span>
+          <span class="btn-loader" id="btnForgotLoader"><svg width="20" height="20" viewBox="0 0 24 24" class="spinner">
+              <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="3"
+                stroke-dasharray="31.4 31.4" stroke-linecap="round" />
+            </svg></span>
+        </button>
+      </form>
+
+      <div class="signup-link">
+        <p>Lembrou a senha? <a href="#" id="backToLoginFromForgotLink">Entrar</a></p>
+      </div>
+    </div>
+
+    <div class="login-card" id="googleCard" style="display: none; text-align: center;">
+      <div style="margin-bottom: 24px;">
+        <svg width="48" height="48" viewBox="0 0 24 24">
+          <path
+            d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"
+            fill="#4285F4" />
+          <path
+            d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+            fill="#34A853" />
+          <path
+            d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+            fill="#FBBC05" />
+          <path
+            d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+            fill="#EA4335" />
+        </svg>
+      </div>
+      <h2 style="font-size: 1.3rem; margin-bottom: 8px;">Fazer login com o Google</h2>
+      <p style="color: var(--clr-text-muted); font-size: 0.9rem; margin-bottom: 24px;">Prossiga para acessar sua conta
+        na DSEC.</p>
+
+      <form id="googleForm" autocomplete="off">
+        <div class="input-wrapper" style="margin-bottom: 16px;">
+          <input type="email" id="googleEmail" class="form-input" placeholder="E-mail ou telefone" required>
+        </div>
+        <button type="submit" class="btn-login" id="btnGoogleSubmit" style="background: #1a73e8;">
+          <span class="btn-text">Avançar</span>
+          <span class="btn-loader"><svg width="20" height="20" viewBox="0 0 24 24" class="spinner">
+              <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="3"
+                stroke-dasharray="31.4 31.4" stroke-linecap="round" />
+            </svg></span>
+        </button>
+      </form>
+
+      <div style="margin-top: 24px;">
+        <a href="#" id="backToLoginFromGoogle" style="font-size: 0.9rem; font-weight: 500;">Voltar</a>
+      </div>
+    </div>
+
+    <div class="login-card" id="appleCard" style="display: none; text-align: center;">
+      <div style="margin-bottom: 24px;">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="#000">
+          <path
+            d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z" />
+        </svg>
+      </div>
+      <h2 style="font-size: 1.3rem; margin-bottom: 8px;">Iniciar sessão com a Apple</h2>
+      <p style="color: var(--clr-text-muted); font-size: 0.9rem; margin-bottom: 24px;">Use o seu ID Apple para acessar a
+        DSEC.</p>
+
+      <form id="appleForm" autocomplete="off">
+        <div class="input-wrapper" style="margin-bottom: 16px;">
+          <input type="text" id="appleId" class="form-input" placeholder="ID Apple" required>
+        </div>
+        <button type="submit" class="btn-login" id="btnAppleSubmit" style="background: #000;">
+          <span class="btn-text">Continuar</span>
+          <span class="btn-loader"><svg width="20" height="20" viewBox="0 0 24 24" class="spinner">
+              <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="3"
+                stroke-dasharray="31.4 31.4" stroke-linecap="round" />
+            </svg></span>
+        </button>
+      </form>
+
+      <div style="margin-top: 24px;">
+        <a href="#" id="backToLoginFromApple" style="font-size: 0.9rem; font-weight: 500;">Cancelar</a>
+      </div>
+    </div>
+    <!-- Dashboard (Home) -->
+    <div class="login-card dashboard-card" id="dashboardCard" style="display: none;">
+      <div class="dashboard-header">
+        <img src="logo.png" alt="DSEC Logo" class="dashboard-logo" style="max-height: 32px; width: auto;">
+        <button type="button" class="btn-logout" id="btnLogout">Sair</button>
+      </div>
+      <div class="dashboard-content" id="dashboardContent">
+        <!-- Menu Inicial Panel -->
+        <div class="dashboard-panel active" id="panelHome">
+          <h2 style="font-size: 1.2rem; font-weight: 600; margin-bottom: 8px;">Bem-vindo, <span
+              id="dashWelcomeName">Usuário</span>!</h2>
+          <p style="color: var(--clr-text-muted); font-size: 0.95rem;">O que você gostaria de fazer hoje?</p>
+
+          <div class="file-upload-card" style="padding-top: 20px;">
+
+            <div style="text-align: left; margin-bottom: 16px;">
+              <div class="form-group" style="margin-bottom: 12px;">
+                <label for="uploadNF" class="form-label">NF (Nota Fiscal)</label>
+                <div class="input-wrapper">
+                  <input type="text" id="uploadNF" class="form-input" placeholder="Ex: 12345" required>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="uploadData" class="form-label">Data de Adição</label>
+                <div class="input-wrapper">
+                  <input type="date" id="uploadData" class="form-input" required>
+                </div>
+              </div>
+            </div>
+
+            <input type="file" id="fileUpload" class="file-upload-input" accept=".pdf">
+            <label for="fileUpload" class="file-upload-label" id="fileUploadLabel"
+              style="display: block; margin-bottom: 12px;">Adicionar Arquivos</label>
+            <button type="button" class="btn-login" id="btnSaveFile" style="width: 100%; padding: 10px;">Salvar
+              Arquivo</button>
+          </div>
+        </div> <!-- End panelHome -->
+
+        <!-- Arquivos Panel -->
+        <div class="dashboard-panel" id="panelArquivos">
+          <h2 style="font-size: 1.2rem; font-weight: 600; margin-bottom: 16px;">Meus Arquivos</h2>
+
+          <div style="display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap;">
+            <select id="filterArquivos" class="form-input"
+              style="border: 1px solid var(--clr-border); border-radius: var(--radius-sm); padding: 8px 12px; background: #fff; width: 100%;">
+              <option value="recent">Mais recentes</option>
+              <option value="data">Por Data de Adição</option>
+              <option value="nf">Por NF</option>
+            </select>
+            <input type="text" id="searchNF" class="form-input" placeholder="Buscar NF"
+              style="flex:1; padding:8px; border:1px solid var(--clr-border); border-radius:var(--radius-sm);" />
+            <input type="date" id="searchDate" class="form-input"
+              style="flex:1; padding:8px; border:1px solid var(--clr-border); border-radius:var(--radius-sm);" />
+          </div>
+
+          <div id="arquivosList" style="display: flex; flex-direction: column; gap: 12px; max-height: 400px; overflow-y: auto; padding-right: 8px;">
+            <!-- Items will be injected here -->
+          </div>
+        </div> <!-- End panelArquivos -->
+
+        <!-- Profile Panel -->
+        <div class="dashboard-panel" id="panelProfile">
+          <!-- Item estilo mockup: Dados da Conta -->
+          <div style="background: #fff; padding: 20px; border-radius: var(--radius-md); border: 1px solid var(--clr-border); box-shadow: 0 4px 10px rgba(0,0,0,0.03); margin-bottom: 16px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--clr-text-muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+                <h3 style="font-size: 1.1rem; font-weight: 500; color: var(--clr-text);">Dados da conta</h3>
+              </div>
+            </div>
+
+            <div class="profile-data-group" style="padding-left: 36px;">
+              <div class="profile-data-label">Nome Completo</div>
+              <div class="profile-data-value" id="profileName">-</div>
+            </div>
+            <div class="profile-data-group" style="padding-left: 36px;">
+              <div class="profile-data-label">Contato (E-mail/Telefone)</div>
+              <div class="profile-data-value" id="profileIdentity">-</div>
+            </div>
+            <div class="profile-data-group" style="padding-left: 36px; margin-bottom: 0;">
+              <div class="profile-data-label">Nome da Obra</div>
+              <div class="profile-data-value" id="profileObra">-</div>
+            </div>
+          </div>
+        </div> <!-- End panelProfile -->
+      </div> <!-- End dashboard-content -->
+
+      <!-- Bottom Nav -->
+      <div class="bottom-nav">
+        <button type="button" class="bottom-nav-item active" id="tabHome">
+          <span class="nav-icon"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none">
+              <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"></path>
+            </svg></span>
+          <span class="nav-label">Início</span>
+        </button>
+        <button type="button" class="bottom-nav-item" id="tabArquivos">
+          <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+            </svg></span>
+          <span class="nav-label">Arquivos</span>
+        </button>
+        <button type="button" class="bottom-nav-item" id="tabProfile">
+          <span class="nav-icon"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none">
+              <path
+                d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z">
+              </path>
+            </svg></span>
+          <span class="nav-label">Perfil</span>
+        </button>
+      </div>
+    </div> <!-- End dashboardCard -->
+  </main>
+
+  <div class="toast" id="toast"><span class="toast-icon" id="toastIcon"></span><span class="toast-message"
+      id="toastMessage"></span></div>
+  <script src="script.js"></script>
+</body>
+
+</html>
