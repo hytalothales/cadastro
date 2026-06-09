@@ -9,16 +9,18 @@ public abstract class Usuario {
     protected String password;
     protected List<Arquivo> files;
     protected String role;
+    protected String obra;
 
     public Usuario() {
         this.files = new ArrayList<>();
     }
 
-    public Usuario(String name, String identity, String password, String role) {
+    public Usuario(String name, String identity, String password, String role, String obra) {
         this.name = name;
         this.identity = identity;
         this.password = password;
         this.role = role;
+        this.obra = obra;
         this.files = new ArrayList<>();
     }
 
@@ -36,4 +38,7 @@ public abstract class Usuario {
 
     public String getRole() { return role; }
     public void setRole(String role) { this.role = role; }
+
+    public String getObra() { return obra; }
+    public void setObra(String obra) { this.obra = obra; }
 }

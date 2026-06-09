@@ -7,6 +7,6 @@ public class Admin extends Usuario {
     }
 
     public Admin(String name, String identity, String password) {
-        super(name, identity, password, "admin");
+        super(name, identity, password, "admin", null);
     }
 }

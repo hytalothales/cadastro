@@ -37,12 +37,13 @@ public class AuthController {
         String name = dados.get("name");
         String identity = dados.get("identity");
         String password = dados.get("password");
+        String obra = dados.get("obra");
 
         if (repository.findByIdentity(identity).isPresent()) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Usuário já existe");
         }
 
-        Cliente novoCliente = new Cliente(name, identity, password);
+        Cliente novoCliente = new Cliente(name, identity, password, obra);
         repository.save(novoCliente);
 
         return ResponseEntity.ok("Cadastrado com sucesso");

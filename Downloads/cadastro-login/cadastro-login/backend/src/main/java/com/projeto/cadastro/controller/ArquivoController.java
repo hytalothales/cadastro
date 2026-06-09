@@ -49,4 +49,46 @@ public class ArquivoController {
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado");
     }
+
+    @GetMapping("/obra/{obra}")
+    public ResponseEntity<?> getArquivosPorObra(@PathVariable String obra) {
+        if (obra == null || obra.isEmpty() || "null".equalsIgnoreCase(obra) || "undefined".equalsIgnoreCase(obra)) {
+            List<Arquivo> todosArquivos = repository.findAll().stream()
+                    .flatMap(u -> u.getFiles().stream())
+                    .toList();
+            return ResponseEntity.ok(todosArquivos);
+        }
+        
+        List<Arquivo> arquivos = repository.findAll().stream()
+                .filter(u -> u.getObra() != null && u.getObra().equalsIgnoreCase(obra))
+                .flatMap(u -> u.getFiles().stream())
+                .toList();
+        return ResponseEntity.ok(arquivos);
+    }
+
+    @PostMapping("/obra/{obra}")
+    public ResponseEntity<?> uploadArquivoPorObra(@PathVariable String obra, @RequestBody Arquivo arquivo) {
+        if (obra == null || obra.isEmpty() || "null".equalsIgnoreCase(obra) || "undefined".equalsIgnoreCase(obra)) {
+            List<Usuario> admins = repository.findAll().stream()
+                    .filter(u -> "admin".equals(u.getRole()))
+                    .toList();
+            if (!admins.isEmpty()) {
+                admins.get(0).getFiles().add(arquivo);
+                repository.save(admins.get(0));
+                return ResponseEntity.ok("Arquivo salvo com sucesso");
+            }
+        }
+
+        List<Usuario> usuariosDaObra = repository.findAll().stream()
+                .filter(u -> u.getObra() != null && u.getObra().equalsIgnoreCase(obra))
+                .toList();
+
+        if (!usuariosDaObra.isEmpty()) {
+            usuariosDaObra.get(0).getFiles().add(arquivo);
+            repository.save(usuariosDaObra.get(0));
+            return ResponseEntity.ok("Arquivo salvo com sucesso");
+        }
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Nenhum usuário cadastrado para esta obra");
+    }
 }

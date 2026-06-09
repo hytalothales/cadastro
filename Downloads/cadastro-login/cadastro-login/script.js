@@ -78,6 +78,13 @@
   const toastIcon     = document.getElementById('toastIcon');
   const toastMsg      = document.getElementById('toastMessage');
 
+  // PDF Modal
+  const pdfModalOverlay  = document.getElementById('pdfModalOverlay');
+  const pdfModalIframe   = document.getElementById('pdfModalIframe');
+  const pdfModalFileName = document.getElementById('pdfModalFileName');
+  const pdfModalDownload = document.getElementById('pdfModalDownload');
+  const pdfModalClose    = document.getElementById('pdfModalClose');
+
   // Dashboard DOM
   const dashboardCard = document.getElementById('dashboardCard');
   const btnLogout     = document.getElementById('btnLogout');
@@ -880,10 +887,18 @@
               <span>NF: ${nf}</span>
               <span>Data: ${date}</span>
             </div>
-            <div style="display: flex; gap: 8px; margin-top: 8px;">`;
+            <div style="display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap;">`;
           
           if (content) {
-            inner += `<a href="${content}" download="${name}" class="btn-open" style="background:var(--clr-primary);color:#fff;border:none;padding:6px 12px;border-radius:4px;cursor:pointer;font-size:0.8rem;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;">Baixar Arquivo</a>`;
+            inner += `
+              <button type="button" class="btn-view-pdf" data-idx="${idx}" style="background:var(--clr-primary);color:#fff;border:none;padding:6px 12px;border-radius:4px;cursor:pointer;font-size:0.8rem;display:inline-flex;align-items:center;gap:6px;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                Visualizar
+              </button>
+              <a href="${content}" download="${name}" style="background:transparent;color:var(--clr-primary);border:1px solid var(--clr-primary);padding:6px 12px;border-radius:4px;cursor:pointer;font-size:0.8rem;text-decoration:none;display:inline-flex;align-items:center;gap:6px;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Baixar
+              </a>`;
           }
           
           if (isAdmin) {
@@ -893,6 +908,18 @@
           inner += `</div>`;
           div.innerHTML = inner;
           arquivosList.appendChild(div);
+        });
+
+        // Attach view PDF handlers
+        const viewButtons = arquivosList.querySelectorAll('.btn-view-pdf');
+        viewButtons.forEach(btn => {
+          btn.addEventListener('click', () => {
+            const idx = parseInt(btn.getAttribute('data-idx'));
+            const f = files[idx];
+            if (f && f.content) {
+              window._openPdfModal(f.content, f.name || 'documento.pdf');
+            }
+          });
         });
 
         // Attach delete handlers only if admin
@@ -926,5 +953,38 @@
 
   // Restaurar sessão ao final após todas as variáveis estarem inicializadas
   restoreFromCache();
+
+  // ─── PDF Viewer Modal ─────────────────────
+  function openPdfModal(fileContent, fileName) {
+    pdfModalFileName.textContent = fileName || 'Documento.pdf';
+    pdfModalDownload.href = fileContent;
+    pdfModalDownload.download = fileName || 'documento.pdf';
+    // Use the base64 data URL directly in the iframe src
+    pdfModalIframe.src = fileContent;
+    pdfModalOverlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closePdfModal() {
+    pdfModalOverlay.classList.remove('open');
+    document.body.style.overflow = '';
+    // Clear iframe src after animation
+    setTimeout(() => { pdfModalIframe.src = ''; }, 350);
+  }
+
+  pdfModalClose.addEventListener('click', closePdfModal);
+
+  pdfModalOverlay.addEventListener('click', function(e) {
+    if (e.target === pdfModalOverlay) closePdfModal();
+  });
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && pdfModalOverlay.classList.contains('open')) {
+      closePdfModal();
+    }
+  });
+
+  // Expose openPdfModal so renderArquivos can use it
+  window._openPdfModal = openPdfModal;
 
 })();
