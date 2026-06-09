@@ -1,0 +1,253 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1150 1150" width="100%" height="100%">
+  <defs>
+    <!-- Background Gradient -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0F172A" />
+      <stop offset="100%" stop-color="#1E293B" />
+    </linearGradient>
+
+    <!-- Header Gradients -->
+    <linearGradient id="ctrlGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#2563EB" />
+      <stop offset="100%" stop-color="#3B82F6" />
+    </linearGradient>
+    <linearGradient id="repoGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#059669" />
+      <stop offset="100%" stop-color="#10B981" />
+    </linearGradient>
+    <linearGradient id="modelGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#7C3AED" />
+      <stop offset="100%" stop-color="#8B5CF6" />
+    </linearGradient>
+    <linearGradient id="abstractGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#D97706" />
+      <stop offset="100%" stop-color="#F59E0B" />
+    </linearGradient>
+    <linearGradient id="appGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#4B5563" />
+      <stop offset="100%" stop-color="#6B7280" />
+    </linearGradient>
+
+    <!-- Drop Shadows -->
+    <filter id="dropShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="8" stdDeviation="6" flood-color="#000000" flood-opacity="0.4" />
+    </filter>
+
+    <!-- Markers for Arrows -->
+    <!-- Inheritance: hollow triangle -->
+    <marker id="inheritance" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="10" markerHeight="10" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#0F172A" stroke="#94A3B8" stroke-width="1.5" />
+    </marker>
+    <!-- Association: simple pointer -->
+    <marker id="association" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9" fill="none" stroke="#94A3B8" stroke-width="2" />
+    </marker>
+    <!-- Aggregation: hollow diamond -->
+    <marker id="aggregation" viewBox="0 0 12 12" refX="12" refY="6" markerWidth="10" markerHeight="10" orient="auto-start-reverse">
+      <path d="M 0 6 L 6 11 L 12 6 L 6 1 z" fill="#0F172A" stroke="#94A3B8" stroke-width="1.5" />
+    </marker>
+    <!-- Dependency: dashed pointer -->
+    <marker id="dependency" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 2 L 10 5 L 0 8" fill="none" stroke="#94A3B8" stroke-width="1.5" />
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="100%" height="100%" fill="url(#bgGrad)" />
+  
+  <!-- Grid pattern (subtle) -->
+  <g opacity="0.05">
+    <path d="M 0,50 L 1150,50 M 0,100 L 1150,100 M 0,150 L 1150,150 M 0,200 L 1150,200 M 0,250 L 1150,250 M 0,300 L 1150,300 M 0,350 L 1150,350 M 0,400 L 1150,400 M 0,450 L 1150,450 M 0,500 L 1150,500 M 0,550 L 1150,550 M 0,600 L 1150,600 M 0,650 L 1150,650 M 0,700 L 1150,700 M 0,750 L 1150,750 M 0,800 L 1150,800 M 0,850 L 1150,850 M 0,900 L 1150,900 M 0,950 L 1150,950 M 0,1000 L 1150,1000 M 0,1050 L 1150,1050 M 0,1100 L 1150,1100" stroke="#FFFFFF" stroke-width="1" />
+    <path d="M 50,0 L 50,1150 M 100,0 L 100,1150 M 150,0 L 150,1150 M 200,0 L 200,1150 M 250,0 L 250,1150 M 300,0 L 300,1150 M 350,0 L 350,1150 M 400,0 L 400,1150 M 450,0 L 450,1150 M 500,0 L 500,1150 M 550,0 L 550,1150 M 600,0 L 600,1150 M 650,0 L 650,1150 M 700,0 L 700,1150 M 750,0 L 750,1150 M 800,0 L 800,1150 M 850,0 L 850,1150 M 900,0 L 900,1150 M 950,0 L 950,1150 M 1000,0 L 1000,1150 M 1050,0 L 1050,1150 M 1100,0 L 1100,1150" stroke="#FFFFFF" stroke-width="1" />
+  </g>
+
+  <!-- TITLE -->
+  <text x="50%" y="40" font-family="'Segoe UI', Roboto, Helvetica, sans-serif" font-size="24" font-weight="bold" fill="#F8FAFC" text-anchor="middle">DIAGRAMA DE CLASSES - BACKEND JAVA</text>
+
+  <!-- ==================== CONNECTORS ==================== -->
+  <!-- AuthController -> MemoriaRepository -->
+  <path d="M 520,240 L 520,340" fill="none" stroke="#94A3B8" stroke-dasharray="4,4" stroke-width="1.5" marker-end="url(#association)" />
+  <text x="530" y="295" font-family="'Segoe UI', Roboto, sans-serif" font-size="11" fill="#94A3B8">uses</text>
+
+  <!-- ArquivoController -> MemoriaRepository -->
+  <path d="M 850,280 L 850,390 L 680,390" fill="none" stroke="#94A3B8" stroke-dasharray="4,4" stroke-width="1.5" marker-end="url(#association)" />
+  <text x="750" y="380" font-family="'Segoe UI', Roboto, sans-serif" font-size="11" fill="#94A3B8">uses</text>
+
+  <!-- MemoriaRepository -> Usuario (Aggregation) -->
+  <path d="M 530,520 L 530,600" fill="none" stroke="#94A3B8" stroke-width="1.5" marker-start="url(#aggregation)" />
+  <text x="540" y="565" font-family="'Segoe UI', Roboto, sans-serif" font-size="12" fill="#94A3B8">1..*</text>
+
+  <!-- Usuario -> Arquivo (Composition/Aggregation) -->
+  <path d="M 680,730 L 780,730" fill="none" stroke="#94A3B8" stroke-width="1.5" marker-start="url(#aggregation)" />
+  <text x="730" y="720" font-family="'Segoe UI', Roboto, sans-serif" font-size="12" fill="#94A3B8">1..*</text>
+
+  <!-- Admin -> Usuario (Inheritance) -->
+  <path d="M 200,940 L 200,900 L 510,900 L 510,870" fill="none" stroke="#94A3B8" stroke-width="1.5" marker-end="url(#inheritance)" />
+
+  <!-- Cliente -> Usuario (Inheritance) -->
+  <path d="M 530,940 L 530,870" fill="none" stroke="#94A3B8" stroke-width="1.5" marker-end="url(#inheritance)" />
+
+
+  <!-- ==================== CLASSES ==================== -->
+
+  <!-- 1. CadastroApplication -->
+  <g filter="url(#dropShadow)">
+    <rect x="60" y="80" width="280" height="150" rx="8" fill="#1E293B" stroke="#6B7280" stroke-width="1.5" />
+    <path d="M 60,80 L 340,80 L 340,115 L 60,115 Z" fill="url(#appGrad)" clip-path="inset(0% 0% 0% 0% round 8px 8px 0px 0px)" />
+    <!-- Header Text -->
+    <text x="200" y="97" font-family="'Segoe UI', Roboto, sans-serif" font-size="11" font-style="italic" fill="#E2E8F0" text-anchor="middle">«SpringBootApplication»</text>
+    <text x="200" y="110" font-family="'Segoe UI', Roboto, sans-serif" font-size="14" font-weight="bold" fill="#FFFFFF" text-anchor="middle">CadastroApplication</text>
+    
+    <!-- Attributes (None) -->
+    <line x1="60" y1="125" x2="340" y2="125" stroke="#334155" stroke-width="1" />
+    
+    <!-- Methods -->
+    <text x="75" y="145" font-family="'Segoe UI', Roboto, sans-serif" font-size="12" fill="#E2E8F0" font-weight="bold">+ main(args: String[]): void</text>
+    <text x="75" y="165" font-family="'Segoe UI', Roboto, sans-serif" font-size="12" fill="#E2E8F0">+ corsConfigurer(): WebMvcConfigurer</text>
+  </g>
+
+  <!-- 2. AuthController -->
+  <g filter="url(#dropShadow)">
+    <rect x="380" y="80" width="280" height="160" rx="8" fill="#1E293B" stroke="#3B82F6" stroke-width="1.5" />
+    <path d="M 380,80 L 660,80 L 660,115 L 380,115 Z" fill="url(#ctrlGrad)" />
+    <!-- Header Text -->
+    <text x="520" y="97" font-family="'Segoe UI', Roboto, sans-serif" font-size="11" font-style="italic" fill="#E2E8F0" text-anchor="middle">«RestController»</text>
+    <text x="520" y="110" font-family="'Segoe UI', Roboto, sans-serif" font-size="14" font-weight="bold" fill="#FFFFFF" text-anchor="middle">AuthController</text>
+    
+    <!-- Attributes -->
+    <text x="395" y="135" font-family="'Segoe UI', Roboto, sans-serif" font-size="12" fill="#94A3B8">- repository: MemoriaRepository</text>
+    
+    <line x1="380" y1="145" x2="660" y2="145" stroke="#334155" stroke-width="1" />
+    
+    <!-- Methods -->
+    <text x="395" y="165" font-family="'Segoe UI', Roboto, sans-serif" font-size="12" fill="#E2E8F0" font-weight="bold">+ login(credenciais: Map): ResponseEntity</text>
+    <text x="395" y="185" font-family="'Segoe UI', Roboto, sans-serif" font-size="12" fill="#E2E8F0" font-weight="bold">+ register(dados: Map): ResponseEntity</text>
+  </g>
+
+  <!-- 3. ArquivoController -->
+  <g filter="url(#dropShadow)">
+    <rect x="700" y="80" width="380" height="200" rx="8" fill="#1E293B" stroke="#3B82F6" stroke-width="1.5" />
+    <path d="M 700,80 L 1080,80 L 1080,115 L 700,115 Z" fill="url(#ctrlGrad)" />
+    <!-- Header Text -->
+    <text x="890" y="97" font-family="'Segoe UI', Roboto, sans-serif" font-size="11" font-style="italic" fill="#E2E8F0" text-anchor="middle">«RestController»</text>
+    <text x="890" y="110" font-family="'Segoe UI', Roboto, sans-serif" font-size="14" font-weight="bold" fill="#FFFFFF" text-anchor="middle">ArquivoController</text>
+    
+    <!-- Attributes -->
+    <text x="715" y="135" font-family="'Segoe UI', Roboto, sans-serif" font-size="12" fill="#94A3B8">- repository: MemoriaRepository</text>
+    
+    <line x1="700" y1="145" x2="1080" y2="145" stroke="#334155" stroke-width="1" />
+    
+    <!-- Methods -->
+    <text x="715" y="165" font-family="'Segoe UI', Roboto, sans-serif" font-size="12" fill="#E2E8F0">+ getArquivos(identity: String): ResponseEntity</text>
+    <text x="715" y="185" font-family="'Segoe UI', Roboto, sans-serif" font-size="12" fill="#E2E8F0">+ uploadArquivo(identity, arquivo): ResponseEntity</text>
+    <text x="715" y="205" font-family="'Segoe UI', Roboto, sans-serif" font-size="12" fill="#E2E8F0">+ getArquivosPorObra(obra: String): ResponseEntity</text>
+    <text x="715" y="225" font-family="'Segoe UI', Roboto, sans-serif" font-size="12" fill="#E2E8F0">+ uploadArquivoPorObra(obra, arquivo): ResponseEntity</text>
+  </g>
+
+  <!-- 4. MemoriaRepository -->
+  <g filter="url(#dropShadow)">
+    <rect x="380" y="340" width="300" height="180" rx="8" fill="#1E293B" stroke="#10B981" stroke-width="1.5" />
+    <path d="M 380,340 L 680,340 L 680,375 L 380,375 Z" fill="url(#repoGrad)" />
+    <!-- Header Text -->
+    <text x="530" y="357" font-family="'Segoe UI', Roboto, sans-serif" font-size="11" font-style="italic" fill="#E2E8F0" text-anchor="middle">«Repository»</text>
+    <text x="530" y="370" font-family="'Segoe UI', Roboto, sans-serif" font-size="14" font-weight="bold" fill="#FFFFFF" text-anchor="middle">MemoriaRepository</text>
+    
+    <!-- Attributes -->
+    <text x="395" y="395" font-family="'Segoe UI', Roboto, sans-serif" font-size="12" fill="#94A3B8">- usuarios: List&lt;Usuario&gt;</text>
+    
+    <line x1="380" y1="405" x2="680" y2="405" stroke="#334155" stroke-width="1" />
+    
+    <!-- Methods -->
+    <text x="395" y="425" font-family="'Segoe UI', Roboto, sans-serif" font-size="12" fill="#E2E8F0">+ MemoriaRepository()</text>
+    <text x="395" y="445" font-family="'Segoe UI', Roboto, sans-serif" font-size="12" fill="#E2E8F0">+ findAll(): List&lt;Usuario&gt;</text>
+    <text x="395" y="465" font-family="'Segoe UI', Roboto, sans-serif" font-size="12" fill="#E2E8F0">+ findByIdentity(identity: String): Optional&lt;Usuario&gt;</text>
+    <text x="395" y="485" font-family="'Segoe UI', Roboto, sans-serif" font-size="12" fill="#E2E8F0">+ save(usuario: Usuario): void</text>
+  </g>
+
+  <!-- 5. Usuario (Abstract) -->
+  <g filter="url(#dropShadow)">
+    <rect x="380" y="600" width="300" height="270" rx="8" fill="#1E293B" stroke="#F59E0B" stroke-width="1.5" />
+    <path d="M 380,600 L 680,600 L 680,635 L 380,635 Z" fill="url(#abstractGrad)" />
+    <!-- Header Text -->
+    <text x="530" y="617" font-family="'Segoe UI', Roboto, sans-serif" font-size="11" font-style="italic" fill="#E2E8F0" text-anchor="middle">«abstract»</text>
+    <text x="530" y="630" font-family="'Segoe UI', Roboto, sans-serif" font-size="14" font-weight="bold" fill="#FFFFFF" text-anchor="middle">Usuario</text>
+    
+    <!-- Attributes -->
+    <text x="395" y="655" font-family="'Segoe UI', Roboto, sans-serif" font-size="12" fill="#E2E8F0"># name: String</text>
+    <text x="395" y="670" font-family="'Segoe UI', Roboto, sans-serif" font-size="12" fill="#E2E8F0"># identity: String</text>
+    <text x="395" y="685" font-family="'Segoe UI', Roboto, sans-serif" font-size="12" fill="#E2E8F0"># password: String</text>
+    <text x="395" y="700" font-family="'Segoe UI', Roboto, sans-serif" font-size="12" fill="#E2E8F0"># files: List&lt;Arquivo&gt;</text>
+    <text x="395" y="715" font-family="'Segoe UI', Roboto, sans-serif" font-size="12" fill="#E2E8F0"># role: String</text>
+    <text x="395" y="730" font-family="'Segoe UI', Roboto, sans-serif" font-size="12" fill="#E2E8F0"># obra: String</text>
+    
+    <line x1="380" y1="740" x2="680" y2="740" stroke="#334155" stroke-width="1" />
+    
+    <!-- Methods -->
+    <text x="395" y="760" font-family="'Segoe UI', Roboto, sans-serif" font-size="12" fill="#E2E8F0">+ Usuario()</text>
+    <text x="395" y="775" font-family="'Segoe UI', Roboto, sans-serif" font-size="12" fill="#E2E8F0">+ Usuario(name, identity, ...)</text>
+    <text x="395" y="790" font-family="'Segoe UI', Roboto, sans-serif" font-size="12" fill="#E2E8F0">+ getName() / setName(name)</text>
+    <text x="395" y="805" font-family="'Segoe UI', Roboto, sans-serif" font-size="12" fill="#E2E8F0">+ getIdentity() / setIdentity(id)</text>
+    <text x="395" y="820" font-family="'Segoe UI', Roboto, sans-serif" font-size="12" fill="#E2E8F0">+ getFiles() / setFiles(files)</text>
+    <text x="395" y="835" font-family="'Segoe UI', Roboto, sans-serif" font-size="12" fill="#E2E8F0">+ getObra() / setObra(obra)</text>
+    <text x="395" y="850" font-family="'Segoe UI', Roboto, sans-serif" font-size="12" fill="#E2E8F0">+ getRole() / setRole(role)</text>
+  </g>
+
+  <!-- 6. Arquivo -->
+  <g filter="url(#dropShadow)">
+    <rect x="780" y="600" width="300" height="250" rx="8" fill="#1E293B" stroke="#8B5CF6" stroke-width="1.5" />
+    <path d="M 780,600 L 1080,600 L 1080,635 L 780,635 Z" fill="url(#modelGrad)" />
+    <!-- Header Text -->
+    <text x="930" y="617" font-family="'Segoe UI', Roboto, sans-serif" font-size="11" font-style="italic" fill="#E2E8F0" text-anchor="middle">«Entity»</text>
+    <text x="930" y="630" font-family="'Segoe UI', Roboto, sans-serif" font-size="14" font-weight="bold" fill="#FFFFFF" text-anchor="middle">Arquivo</text>
+    
+    <!-- Attributes -->
+    <text x="795" y="655" font-family="'Segoe UI', Roboto, sans-serif" font-size="12" fill="#E2E8F0">- name: String</text>
+    <text x="795" y="670" font-family="'Segoe UI', Roboto, sans-serif" font-size="12" fill="#E2E8F0">- nf: String</text>
+    <text x="795" y="685" font-family="'Segoe UI', Roboto, sans-serif" font-size="12" fill="#E2E8F0">- date: String</text>
+    <text x="795" y="700" font-family="'Segoe UI', Roboto, sans-serif" font-size="12" fill="#E2E8F0">- timestamp: long</text>
+    <text x="795" y="715" font-family="'Segoe UI', Roboto, sans-serif" font-size="12" fill="#E2E8F0">- content: String</text>
+    
+    <line x1="780" y1="725" x2="1080" y2="725" stroke="#334155" stroke-width="1" />
+    
+    <!-- Methods -->
+    <text x="795" y="745" font-family="'Segoe UI', Roboto, sans-serif" font-size="12" fill="#E2E8F0">+ Arquivo()</text>
+    <text x="795" y="760" font-family="'Segoe UI', Roboto, sans-serif" font-size="12" fill="#E2E8F0">+ Arquivo(name, nf, date, ...)</text>
+    <text x="795" y="775" font-family="'Segoe UI', Roboto, sans-serif" font-size="12" fill="#E2E8F0">+ getName() / setName(name)</text>
+    <text x="795" y="790" font-family="'Segoe UI', Roboto, sans-serif" font-size="12" fill="#E2E8F0">+ getNf() / setNf(nf)</text>
+    <text x="795" y="805" font-family="'Segoe UI', Roboto, sans-serif" font-size="12" fill="#E2E8F0">+ getDate() / setDate(date)</text>
+    <text x="795" y="820" font-family="'Segoe UI', Roboto, sans-serif" font-size="12" fill="#E2E8F0">+ getTimestamp() / setTimestamp()</text>
+    <text x="795" y="835" font-family="'Segoe UI', Roboto, sans-serif" font-size="12" fill="#E2E8F0">+ getContent() / setContent()</text>
+  </g>
+
+  <!-- 7. Admin -->
+  <g filter="url(#dropShadow)">
+    <rect x="60" y="940" width="280" height="130" rx="8" fill="#1E293B" stroke="#8B5CF6" stroke-width="1.5" />
+    <path d="M 60,940 L 340,940 L 340,975 L 60,975 Z" fill="url(#modelGrad)" />
+    <!-- Header Text -->
+    <text x="200" y="965" font-family="'Segoe UI', Roboto, sans-serif" font-size="14" font-weight="bold" fill="#FFFFFF" text-anchor="middle">Admin</text>
+    
+    <!-- Attributes (None) -->
+    <line x1="60" y1="985" x2="340" y2="985" stroke="#334155" stroke-width="1" />
+    
+    <!-- Methods -->
+    <text x="75" y="1005" font-family="'Segoe UI', Roboto, sans-serif" font-size="12" fill="#E2E8F0">+ Admin()</text>
+    <text x="75" y="1025" font-family="'Segoe UI', Roboto, sans-serif" font-size="12" fill="#E2E8F0">+ Admin(name, identity, password)</text>
+  </g>
+
+  <!-- 8. Cliente -->
+  <g filter="url(#dropShadow)">
+    <rect x="380" y="940" width="300" height="150" rx="8" fill="#1E293B" stroke="#8B5CF6" stroke-width="1.5" />
+    <path d="M 380,940 L 680,940 L 680,975 L 380,975 Z" fill="url(#modelGrad)" />
+    <!-- Header Text -->
+    <text x="530" y="965" font-family="'Segoe UI', Roboto, sans-serif" font-size="14" font-weight="bold" fill="#FFFFFF" text-anchor="middle">Cliente</text>
+    
+    <!-- Attributes (None) -->
+    <line x1="380" y1="985" x2="680" y2="985" stroke="#334155" stroke-width="1" />
+    
+    <!-- Methods -->
+    <text x="395" y="1005" font-family="'Segoe UI', Roboto, sans-serif" font-size="12" fill="#E2E8F0">+ Cliente()</text>
+    <text x="395" y="1025" font-family="'Segoe UI', Roboto, sans-serif" font-size="12" fill="#E2E8F0">+ Cliente(name, identity, password)</text>
+    <text x="395" y="1045" font-family="'Segoe UI', Roboto, sans-serif" font-size="12" fill="#E2E8F0">+ Cliente(name, id, pass, obra)</text>
+  </g>
+
+</svg>
