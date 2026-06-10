@@ -1014,7 +1014,8 @@ input {
 
 .pdf-modal-body {
   flex: 1;
-  overflow: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
   background: #f1f5f9;
   position: relative;
 }

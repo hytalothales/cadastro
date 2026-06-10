@@ -31,9 +31,6 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-				<configuration>
-					<jvm>E:\bin\java.exe</jvm>
-				</configuration>
 			</plugin>
 		</plugins>
 	</build>

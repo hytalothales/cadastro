@@ -1,0 +1,9 @@
+com\projeto\cadastro\CadastroApplication.class
+com\projeto\cadastro\controller\ArquivoController.class
+com\projeto\cadastro\controller\AuthController.class
+com\projeto\cadastro\model\Cliente.class
+com\projeto\cadastro\model\Arquivo.class
+com\projeto\cadastro\model\Usuario.class
+com\projeto\cadastro\model\Admin.class
+com\projeto\cadastro\CadastroApplication$1.class
+com\projeto\cadastro\repository\MemoriaRepository.class
